@@ -6,7 +6,7 @@ from pydantic import BaseModel, HttpUrl, Field
 
 class URLCreate(BaseModel):
     """Schema for creating a new short URL."""
-    original_url: str = Field(..., description="The original URL to shorten")
+    original_url: HttpUrl = Field(..., description="The original URL to shorten (must be a valid URL starting with http:// or https://)")
 
 
 class URLResponse(BaseModel):
