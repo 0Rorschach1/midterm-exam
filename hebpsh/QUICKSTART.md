@@ -4,7 +4,7 @@ Get the URL Shortener API up and running in 5 minutes!
 
 ## Prerequisites
 
-- Python 3.12+
+- Python 3.11+
 - Poetry (will be installed if needed)
 - Docker (for PostgreSQL)
 
@@ -126,6 +126,48 @@ APP_TTL_MINUTES=1440  # 24 hours
 ```
 
 ## Troubleshooting
+
+## Troubleshooting
+
+### Password Authentication Failed Error
+
+If you get `sqlalchemy.exc.OperationalError: password authentication failed for user "user"`:
+
+**This means the database isn't running or doesn't exist.**
+
+1. **Check if database container is running**:
+   ```bash
+   docker ps | grep urlshortener-db
+   ```
+
+2. **If not listed, run the setup script**:
+   ```bash
+   ./setup_database.sh
+   ```
+
+3. **If it shows an error, remove old container and retry**:
+   ```bash
+   docker stop urlshortener-db 2>/dev/null
+   docker rm urlshortener-db 2>/dev/null
+   ./setup_database.sh
+   ```
+
+4. **Verify the `.env` file exists**:
+   ```bash
+   cat .env
+   # Should show: DATABASE_URL=postgresql://user:password@localhost:5432/urlshortener
+   ```
+
+5. **If .env doesn't exist**:
+   ```bash
+   cp .env.example .env
+   ```
+
+6. **Test database connection**:
+   ```bash
+   docker exec -it urlshortener-db psql -U user -d urlshortener
+   # Type \q to exit
+   ```
 
 ### Database Connection Error
 
