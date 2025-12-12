@@ -1,0 +1,223 @@
+{
+  "info": {
+    "name": "URL Shortener API",
+    "description": "Complete API collection for URL Shortener Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the service is running"
+      }
+    },
+    {
+      "name": "Create Short URL",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"original_url\": \"https://www.example.com/very/long/url/path/to/resource\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/urls",
+          "host": ["{{base_url}}"],
+          "path": ["urls"]
+        },
+        "description": "User Story 1: Create a short URL from a long URL"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"original_url\": \"https://www.example.com/very/long/url/path/to/resource\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/urls",
+              "host": ["{{base_url}}"],
+              "path": ["urls"]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "body": "{\n  \"status\": \"success\",\n  \"message\": \"Short URL created successfully\",\n  \"data\": {\n    \"id\": 1,\n    \"original_url\": \"https://www.example.com/very/long/url/path/to/resource\",\n    \"short_code\": \"aB3xY9\",\n    \"created_at\": \"2025-12-12T00:00:00\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get All URLs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/urls",
+          "host": ["{{base_url}}"],
+          "path": ["urls"]
+        },
+        "description": "User Story 3: Get a list of all shortened URLs"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/urls",
+              "host": ["{{base_url}}"],
+              "path": ["urls"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "body": "{\n  \"status\": \"success\",\n  \"data\": [\n    {\n      \"id\": 1,\n      \"original_url\": \"https://www.example.com/very/long/url/path/to/resource\",\n      \"short_code\": \"aB3xY9\",\n      \"created_at\": \"2025-12-12T00:00:00\"\n    },\n    {\n      \"id\": 2,\n      \"original_url\": \"https://www.another-example.com/another/long/path\",\n      \"short_code\": \"xY7zW2\",\n      \"created_at\": \"2025-12-12T01:00:00\"\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Redirect to Original URL",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/u/:code",
+          "host": ["{{base_url}}"],
+          "path": ["u", ":code"],
+          "variable": [
+            {
+              "key": "code",
+              "value": "aB3xY9",
+              "description": "The short code to redirect"
+            }
+          ]
+        },
+        "description": "User Story 2: Redirect to the original URL using short code"
+      },
+      "response": [
+        {
+          "name": "Redirect Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/u/aB3xY9",
+              "host": ["{{base_url}}"],
+              "path": ["u", "aB3xY9"]
+            }
+          },
+          "status": "Found",
+          "code": 302,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Location",
+              "value": "https://www.example.com/very/long/url/path/to/resource"
+            }
+          ],
+          "body": ""
+        },
+        {
+          "name": "Not Found Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/u/invalid",
+              "host": ["{{base_url}}"],
+              "path": ["u", "invalid"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "body": "{\n  \"status\": \"failure\",\n  \"message\": \"URL not found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Delete URL",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/urls/:code",
+          "host": ["{{base_url}}"],
+          "path": ["urls", ":code"],
+          "variable": [
+            {
+              "key": "code",
+              "value": "aB3xY9",
+              "description": "The short code to delete"
+            }
+          ]
+        },
+        "description": "User Story 4: Delete a shortened URL by its short code"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/urls/aB3xY9",
+              "host": ["{{base_url}}"],
+              "path": ["urls", "aB3xY9"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "body": "{\n  \"status\": \"success\",\n  \"message\": \"URL deleted successfully\"\n}"
+        },
+        {
+          "name": "Not Found Response",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/urls/invalid",
+              "host": ["{{base_url}}"],
+              "path": ["urls", "invalid"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "body": "{\n  \"status\": \"failure\",\n  \"message\": \"URL not found\"\n}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+}
