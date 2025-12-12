@@ -134,7 +134,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/urlshortener
 
 # Application Configuration
 APP_HOST=0.0.0.0
-APP_PORT=8000
+APP_PORT=8003
 APP_TTL_MINUTES=1440
 ```
 
@@ -149,17 +149,17 @@ poetry run alembic upgrade head
 
 ```bash
 # Start the FastAPI server
-poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+poetry run uvicorn app.main:app --host 0.0.0.0 --port 8003 --reload
 ```
 
-The API will be available at `http://localhost:8000`
+The API will be available at `http://localhost:8003`
 
 ## API Documentation
 
 Once the application is running, access the interactive API documentation:
 
-- **Swagger UI**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
+- **Swagger UI**: http://localhost:8003/docs
+- **ReDoc**: http://localhost:8003/redoc
 
 ## API Endpoints
 
@@ -347,30 +347,30 @@ The API uses standard HTTP status codes:
 
 **Create a short URL**:
 ```bash
-curl -X POST http://localhost:8000/urls \
+curl -X POST http://localhost:8003/urls \
   -H "Content-Type: application/json" \
   -d '{"original_url": "https://www.example.com/long/url"}'
 ```
 
 **Get all URLs**:
 ```bash
-curl http://localhost:8000/urls
+curl http://localhost:8003/urls
 ```
 
 **Redirect (follow redirects)**:
 ```bash
-curl -L http://localhost:8000/u/aB3xY9
+curl -L http://localhost:8003/u/aB3xY9
 ```
 
 **Delete a URL**:
 ```bash
-curl -X DELETE http://localhost:8000/urls/aB3xY9
+curl -X DELETE http://localhost:8003/urls/aB3xY9
 ```
 
 ### Testing with Postman
 
 1. Import the API endpoints into Postman
-2. Set the base URL to `http://localhost:8000`
+2. Set the base URL to `http://localhost:8003`
 3. Test each endpoint with sample data
 4. Save screenshots of successful requests in a `postman_screenshots/` folder
 
@@ -446,12 +446,52 @@ Both members implemented the entire layered architecture for their endpoints.
 |-------------------|--------------------------------|--------------------------------------------|
 | DATABASE_URL      | PostgreSQL connection string   | postgresql://user:password@localhost:5432/urlshortener |
 | APP_HOST          | Application host               | 0.0.0.0                                    |
-| APP_PORT          | Application port               | 8000                                       |
+| APP_PORT          | Application port               | 8003                                       |
 | APP_TTL_MINUTES   | URL expiration time (minutes)  | 1440 (24 hours)                            |
 
 ## Troubleshooting
 
 ### Database Connection Issues
+
+#### Password Authentication Failed Error
+
+If you get `password authentication failed for user "user"`:
+
+1. **Make sure PostgreSQL database is running**:
+   ```bash
+   docker ps | grep urlshortener-db
+   ```
+   
+2. **If not running, start it with the setup script**:
+   ```bash
+   ./setup_database.sh
+   ```
+   
+3. **Verify `.env` file exists and has correct credentials**:
+   ```bash
+   cat .env
+   # Should show: DATABASE_URL=postgresql://user:password@localhost:5432/urlshortener
+   ```
+   
+4. **If .env doesn't exist, create it**:
+   ```bash
+   cp .env.example .env
+   ```
+
+5. **Remove any existing conflicting database container**:
+   ```bash
+   docker stop urlshortener-db
+   docker rm urlshortener-db
+   ./setup_database.sh
+   ```
+
+6. **Verify the database is accessible**:
+   ```bash
+   docker exec -it urlshortener-db psql -U user -d urlshortener
+   # Should connect successfully. Type \q to exit
+   ```
+
+#### Other Database Issues
 
 If you get connection errors:
 1. Ensure PostgreSQL is running: `docker ps`
@@ -461,16 +501,17 @@ If you get connection errors:
 ### Migration Issues
 
 If migrations fail:
-1. Check database connection
+1. Check database connection (see above)
 2. Verify alembic.ini configuration
 3. Run: `poetry run alembic current` to check current version
 4. Run: `poetry run alembic upgrade head` to apply migrations
 
 ### Port Already in Use
 
-If port 8000 is busy:
-1. Change `APP_PORT` in `.env`
-2. Or kill the process using port 8000: `lsof -ti:8000 | xargs kill`
+If port 8003 is busy:
+1. Change `APP_PORT` in `.env` to another port
+2. Update `run_server.sh` to match the new port
+3. Or kill the process using port 8003: `lsof -ti:8003 | xargs kill`
 
 ## License
 
