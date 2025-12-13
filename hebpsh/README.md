@@ -514,6 +514,15 @@ If port 8000 is busy:
 2. Update `run_server.sh` to match the new port
 3. Or kill the process using port 8000: `lsof -ti:8000 | xargs kill`
 
+## Postman Collection & Screenshots 
+
+A complete **Postman Collection** has been created with all four API endpoints, including examples for success and error cases.
+
+### Postman Screenshots
+For each route, two screenshots are provided.
+
+All screenshots are located in the `/postman-examples` folder:
+
 
 
 **Project completed as part of Backend Development Course - Midterm Assignment**
