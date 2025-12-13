@@ -134,7 +134,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/urlshortener
 
 # Application Configuration
 APP_HOST=0.0.0.0
-APP_PORT=8003
+APP_PORT=8000
 APP_TTL_MINUTES=1440
 ```
 
@@ -149,17 +149,17 @@ poetry run alembic upgrade head
 
 ```bash
 # Start the FastAPI server
-poetry run uvicorn app.main:app --host 0.0.0.0 --port 8003 --reload
+poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-The API will be available at `http://localhost:8003`
+The API will be available at `http://localhost:8000`
 
 ## API Documentation
 
 Once the application is running, access the interactive API documentation:
 
-- **Swagger UI**: http://localhost:8003/docs
-- **ReDoc**: http://localhost:8003/redoc
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
 
 ## API Endpoints
 
@@ -347,30 +347,30 @@ The API uses standard HTTP status codes:
 
 **Create a short URL**:
 ```bash
-curl -X POST http://localhost:8003/urls \
+curl -X POST http://localhost:8000/urls \
   -H "Content-Type: application/json" \
   -d '{"original_url": "https://www.example.com/long/url"}'
 ```
 
 **Get all URLs**:
 ```bash
-curl http://localhost:8003/urls
+curl http://localhost:8000/urls
 ```
 
 **Redirect (follow redirects)**:
 ```bash
-curl -L http://localhost:8003/u/aB3xY9
+curl -L http://localhost:8000/u/aB3xY9
 ```
 
 **Delete a URL**:
 ```bash
-curl -X DELETE http://localhost:8003/urls/aB3xY9
+curl -X DELETE http://localhost:8000/urls/aB3xY9
 ```
 
 ### Testing with Postman
 
 1. Import the API endpoints into Postman
-2. Set the base URL to `http://localhost:8003`
+2. Set the base URL to `http://localhost:8000`
 3. Test each endpoint with sample data
 4. Save screenshots of successful requests in a `postman_screenshots/` folder
 
@@ -423,11 +423,12 @@ This project was designed as a team assignment with two members:
 - Model design
 - POST /urls endpoint (Create)
 - GET /urls endpoint (List All)
+- GET /u/{code} endpoint (Redirect)
+- DELETE /urls/{code} endpoint (Delete)
+
 
 **Member 2 Responsibilities**:
 - Poetry setup
-- GET /u/{code} endpoint (Redirect)
-- DELETE /urls/{code} endpoint (Delete)
 - Postman documentation
 
 Both members implemented the entire layered architecture for their endpoints.
@@ -446,7 +447,7 @@ Both members implemented the entire layered architecture for their endpoints.
 |-------------------|--------------------------------|--------------------------------------------|
 | DATABASE_URL      | PostgreSQL connection string   | postgresql://user:password@localhost:5432/urlshortener |
 | APP_HOST          | Application host               | 0.0.0.0                                    |
-| APP_PORT          | Application port               | 8003                                       |
+| APP_PORT          | Application port               | 8000                                       |
 | APP_TTL_MINUTES   | URL expiration time (minutes)  | 1440 (24 hours)                            |
 
 ## Troubleshooting
@@ -508,20 +509,20 @@ If migrations fail:
 
 ### Port Already in Use
 
-If port 8003 is busy:
+If port 8000 is busy:
 1. Change `APP_PORT` in `.env` to another port
 2. Update `run_server.sh` to match the new port
-3. Or kill the process using port 8003: `lsof -ti:8003 | xargs kill`
+3. Or kill the process using port 8000: `lsof -ti:8000 | xargs kill`
 
-## License
+## Postman Collection & Screenshots 
 
-This is an educational project for learning backend development concepts.
+A complete **Postman Collection** has been created with all four API endpoints, including examples for success and error cases.
 
-## Contributors
+### Postman Screenshots
+For each route, two screenshots are provided.
 
-- Team Member 1
-- Team Member 2
+All screenshots are located in the `/postman-examples` folder:
 
----
+
 
 **Project completed as part of Backend Development Course - Midterm Assignment**
